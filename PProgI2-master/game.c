@@ -51,17 +51,16 @@ static callback_fn game_callback_fn_list[N_CALLBACK]={
 *      @brief Creates the game
 *                              
 *      It creates the game, load the spaces to NULL, creates the player
-*           and the array of objects and initializes and initializes their Id 
-*                     to the local variable i last_cmd to no command                     
+*           and the object and initializes the last_cmd to no command                     
 *                                      
 *      param: structure Game from file game.h
-*
+
 *      @alexConache & CiroAlonso                       
 */
 
 
 STATUS game_create(Game* game) {
-  Id i;
+  int i;
 
   for (i = 0; i < MAX_SPACES; i++) {
     game->spaces[i] = NULL;
@@ -69,7 +68,7 @@ STATUS game_create(Game* game) {
 
   game->players = player_create();
   for(i=0; i<MAX_OBJECTS; i++){
-    game->objects[i]= object_create(i);
+    game->objects[i]= object_create();
   }
   
   game->last_cmd = NO_CMD;

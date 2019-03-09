@@ -32,6 +32,7 @@ struct _Space {
   Id east;                    /*!< The right part of the space */
   Id west;                    /*!< The left part of te space */
   Set *objects;                /*!< What object iss currently on the space */
+  char *gdesc[3]; //campo gdesc
 };
 
 
@@ -70,6 +71,13 @@ Space* space_create(Id id) {
   newSpace->south = NO_ID;
   newSpace->east = NO_ID;
   newSpace->west = NO_ID;
+  
+  int j;
+  for(i=0; i<3;i++){
+      for(j=0; j<7;j++){
+          newSpace->gdesc[i][j] = ' ';
+      }
+  }
 
   newSpace->objects = set_create();
   return newSpace;
@@ -175,6 +183,14 @@ STATUS space_set_south(Space* space, Id id) {
   return OK;
 }
 
+STATUS space_set_gdesc(Space* space, char* gdesc[3]) {
+  if (!space == NO_ID) {
+    return ERROR;
+  }
+  space->gdesc = gdesc;
+  return OK;
+}
+
 /**
  * @brief Links the space to another in the east direction
  *
@@ -237,10 +253,10 @@ STATUS space_set_object(Space* space, int value) {
     return ERROR;
   }
   for(i=0; i<MAX_OBJECTS; i++){
-    if(space->objects[i] == NO_ID){
-      space->objects[i]= value;
+    /*if(*space->objects[i] == NO_ID){
+      *space->objects[i]= value;
       return OK;
-    }
+    }*/
   
   }
   
@@ -346,6 +362,13 @@ Id space_get_east(Space* space) {
   return space->east;
 }
 
+char* space_get_gdesc(Space* space) {
+  if (!space) {
+    return NO_ID;
+  }
+  return space->gdesc;
+}
+
 /**
  * @brief Returns the space in the west of the box we're inquiring about
  *
@@ -386,9 +409,9 @@ Id space_get_object(Space* space, Id Id) {
   }
 
   for(i=0; i<MAX_OBJECTS; i++){
-    if(space->objects[i]==Id){
+    /*if(space->objects[i]==Id){
       return space->objects[i];
-    }
+    }*/
   }
   
 }
@@ -402,11 +425,22 @@ BOOL space_object_id(Space *space, Id Id){
     return FALSE;
   }
   for(i=0; i< MAX_OBJECTS; i++){
-    if(space->objects[i]==Id){
+    /*if(space->objects[i]==Id){
       return TRUE;
-    }
+    }*/
   }
   return FALSE;
+}
+
+
+void space_printASCII(char *gdesc[3]){
+    int i,j;
+    for(i=0; i<3;i++){
+      for(j=0; j<7;j++){
+          printf("%c",gdesc[i][j]);
+      }
+      printf("\n");
+  }
 }
 
 /**

@@ -16,9 +16,19 @@ int main(int argc, char *argv[]){
 Game game;
 T_Command command = NO_CMD;
 Graphic_engine *gengine;
+FILE*  file = NULL;
+
 
 if (argc < 2){
 fprintf(stderr, "Use: %s <game_data_file>\n", argv[0]); return 1;
+}
+
+if (argc == 4 && argv[2]=='-l'){//si son 4 argumentos se quiere log    
+    
+    file = fopen(argv[3],"w");
+    if(file == NULL){
+        return ERROR;
+    }
 }
 
 if (game_create_from_file(&game, argv[1]) == ERROR){
@@ -35,7 +45,11 @@ while ((command != EXIT) && !game_is_over(&game)){
 
 graphic_engine_paint_game(gengine, &game);
 command = get_user_input();
-game_update(&game, command);
+STATUS result = game_update(&game, command);
+fwprintf(file, command+":"+result +"\n");
+}
+if(file != NULL){
+    fclose(file);
 }
 
 game_destroy(&game);

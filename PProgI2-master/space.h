@@ -89,6 +89,8 @@ Id space_get_object(Space* space, Id id);
 /* It prints the space on screen */
 STATUS space_print(Space* space);
 
+void space_printASCII(char *gdesc[3]);
+
 /* Returns true if the object you ask is in the space, false if everythings else   */
 BOOL space_object_id(Space *space, Id Id);
 

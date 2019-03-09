@@ -45,24 +45,24 @@ struct _Object {
  *
  */
 
-Object* object_create(Id id) {
+Object* object_create() {
 
   Object *newObject = NULL;
 
-  newObject = (Object *) malloc(sizeof (Object));
+    newObject = (Object *) malloc(sizeof (Object));
 
-  if (newObject == NULL) {
-    return NULL;
-  }
-  newObject->id = id;
+    if (newObject == NULL) {
+      return NULL;
+    }
+    newObject->id = NO_ID;
 
-  newObject->name[0] = '\0';
+    newObject->name[0] = '\0';
 
-  newObject->object = FALSE;
+    newObject->object = FALSE;
 
-  newObject->object_location = NO_ID;
+    newObject->object_location = NO_ID;
 
-  return newObject;
+    return newObject;
   }
 
 /**

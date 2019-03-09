@@ -32,7 +32,7 @@ typedef struct _Object Object;
  */
 
 /* It creates an object */
-Object* object_create(Id id);
+Object* object_create();
 
 /* It destroyes the memory allocated to the prviously created object, thus destroying it */
 STATUS object_destroy(Object* object);
