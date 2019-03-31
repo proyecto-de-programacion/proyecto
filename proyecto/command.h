@@ -54,6 +54,12 @@ Enum_command command_get_command(Command *pc);
 
 
 /*!< Gets the command selected by the player */
-Command * command_get_user_input();
+STATUS command_get_user_input(Command *pc);
+
+/*!< Sets the cmd of the structure to the cmd you want */
+void command_setCommand(Command *pc, Enum_command cmd);
+
+/*!< Sets the name of the structure to the name you want */
+Command *command_setName(Command *pc, const char *name);
 
 #endif

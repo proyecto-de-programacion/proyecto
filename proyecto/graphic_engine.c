@@ -100,7 +100,6 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
   Space* space_act = NULL;
   Space* space_next = NULL;
   Space* space_back = NULL;
-  int *die = NULL;
   int i = 0;
   int j = 0;
   char *obj[MAX_OBJECTS];
@@ -207,7 +206,7 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
       screen_area_puts(ge->map, str);
       sprintf(str, "  +-------------+");
       screen_area_puts(ge->map, str);
-}
+    }
 
     for(i=0;i<MAX_OBJECTS;i++){
       obj[i] = "       ";
@@ -257,11 +256,11 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
 
   setAux = player_get_object(game->players);
 
-  for(i=0; i<MAX_OBJECTS && player_object_aux !=NO_ID ; i++){
+  for(i=0; i < MAX_OBJECTS ; i++){
 
     if((player_object_aux = set_get_id(setAux, i)) != NO_ID){
 
-      for(j=0; j<MAX_OBJECTS; j++){
+      for(j=0; j < MAX_OBJECTS; j++){
         if(player_object_aux == object_get_id(game->objects[j])){
           sprintf(str, "Object of the player: %s", object_get_name(game->objects[j]));
           screen_area_puts(ge->descript, str);
@@ -292,15 +291,6 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
   sprintf(str, " %s", cmd_to_str[last_cmd-NO_CMD]);
   screen_area_puts(ge->feedback, str);
 
-  j = die_get_lastRoll(game->dice);
-  sprintf(str, "Last throw (dice): %d",j);
-  screen_area_puts(ge->descript,str);
- 
-  if (last_cmd == 2){
-    (*die)--;
-    sprintf(str,"%d ",*die);
-    screen_area_puts(ge->descript,str);
-  }
 
 
   /* Dump to the terminal */

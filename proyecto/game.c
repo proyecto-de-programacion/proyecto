@@ -203,7 +203,11 @@ Id game_get_space_id_at(Game* game, int position) {
 STATUS game_update(Game* game, Command *pc) {
   Enum_command last_cmd;
   last_cmd = command_get_command(pc);
-  
+
+  /*  Sets the structure command of game equal as the one chosen by the player */
+  command_setCommand(game->cmd, last_cmd);
+  command_setName(game->cmd, command_getName(pc));
+
   (*game_callback_fn_list[last_cmd])(game);
   
   return OK;

@@ -49,7 +49,17 @@ char *command_getName(Command *pc){
   if(!pc){
     return NULL;
   }
-  return pc->name;
+  return (char *)pc->name;
+}
+
+Command *command_setName(Command *pc, const char *name){
+  if(!pc || !name){
+    return NULL;
+  }
+  if(!strcpy(pc->name, name)){
+    return NULL;
+  }
+  return pc;
 }
 
 Enum_command command_get_command(Command *pc){
@@ -59,6 +69,12 @@ Enum_command command_get_command(Command *pc){
   return pc->cmd;
 }
 
+void command_setCommand(Command *pc, Enum_command cmd){
+  if( !pc ){
+    return;
+  }
+  pc->cmd = cmd;
+}
 
 STATUS command_get_user_input(Command *pc){
   
@@ -75,13 +91,15 @@ STATUS command_get_user_input(Command *pc){
 
     while (pc->cmd == UNKNOWN && i < N_CMD){ 
 
-      if (!strncasecmp(cmd_name, short_cmd_to_str[i],WORD_SIZE) || !strncasecmp(cmd_name, cmd_to_str[i],WORD_SIZE)){
+      if (!strcasecmp(cmd_name, short_cmd_to_str[i],WORD_SIZE) || !strcasecmp(cmd_name, cmd_to_str[i],WORD_SIZE)){
         pc->cmd = i  + NO_CMD;
 
         if (pc->cmd == PICKUP || pc->cmd == DROP){
           toks= strtok(NULL," ");
           strcpy(pc->name, toks);   
           return OK;         
+        }else{
+          return OK;
         }
       }
       else {
