@@ -25,6 +25,7 @@
 
 #include "types.h"
 #include "set.h"
+#include "link.h"
 
 /**
  * Definition of constant values
@@ -59,28 +60,28 @@ STATUS space_set_name(Space* space, char* name);
 const char* space_get_name(Space* space);
 
 /* It assigns the space another space in the north direction */
-STATUS space_set_north(Space* space,Link link);
+STATUS space_set_north(Space* space,Link *link);
 
 /* It returns wether the space has another linked north of it */
-Link space_get_north(Space* space);
+Link* space_get_north(Space* space);
 
 /* It assigns the space another space in the south direction */
-STATUS space_set_south(Space* space, Link link);
+STATUS space_set_south(Space* space, Link *link);
 
 /* It returns wether the space has another linked south of it */
-Link space_get_south(Space* space);
+Link* space_get_south(Space* space);
 
 /* It assigns the space another space in the east direction */
-STATUS space_set_east(Space* space, Link link);
+STATUS space_set_east(Space* space, Link *link);
 
 /* It returns wether the space has another linked east of it */
-Link space_get_east(Space* space);
+Link* space_get_east(Space* space);
 
 /* It assigns the space another space in the west direction */
-STATUS space_set_west(Space* space, Link link);
+STATUS space_set_west(Space* space, Link *link);
 
 /* It returns wether the space has another linked west of it */
-Link space_get_west(Space* space);
+Link* space_get_west(Space* space);
 
 /* Makes sure the space exists and assign it an object */
 STATUS space_set_object(Space* space, Id id);

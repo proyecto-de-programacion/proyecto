@@ -24,7 +24,12 @@ typedef enum Enum_Command {
   RIGHT,
   ROLL,
   PICKUP,
-  DROP
+  DROP,
+  MOVE_NORTH,
+  MOVE_EAST,
+  MOVE_WEST, 
+  MOVE_SOUTH,
+  INSPECT
   }Enum_command;
 
 typedef struct _Command Command;
@@ -55,5 +60,11 @@ Enum_command command_get_command(Command *pc);
 
 /*!< Gets the command selected by the player */
 STATUS command_get_user_input(Command *pc);
+
+/*!< Sets the cmd of the structure to the cmd you want */
+void command_setCommand(Command *pc, Enum_command cmd);
+
+/*!< Sets the name of the structure to the name you want */
+Command *command_setName(Command *pc, const char *name);
 
 #endif

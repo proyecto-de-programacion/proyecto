@@ -40,11 +40,11 @@ Graphic_engine *graphic_engine_create(){
   screen_init();
   ge = (Graphic_engine *) malloc(sizeof(Graphic_engine));
 
-  ge->map      = screen_area_init( 1, 1, 48, 13);
-  ge->descript = screen_area_init(50, 1, 29, 13);
-  ge->banner   = screen_area_init(28,15, 23,  1);
-  ge->help     = screen_area_init( 1,16, 78,  2);
-  ge->feedback = screen_area_init( 1,19, 78,  3);
+  ge->map      = screen_area_init( 1, 1, 58, 28);
+  ge->descript = screen_area_init(60, 1, 39, 28);
+  ge->banner   = screen_area_init(28,30, 33,  1);
+  ge->help     = screen_area_init( 1,31, 99,  2);
+  ge->feedback = screen_area_init( 1,34, 99,  3);
 
   return ge;
 }
@@ -100,7 +100,6 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
   Space* space_act = NULL;
   Space* space_next = NULL;
   Space* space_back = NULL;
-  int *die = NULL;
   int i = 0;
   int j = 0;
   char *obj[MAX_OBJECTS];
@@ -114,12 +113,15 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
 
   /* Paint the in the map area */
   screen_area_clear(ge->map);
-  if ((id_act = player_get_location(*game->players)) != NO_ID){
+  if ((id_act = player_get_location(game->players)) != NO_ID){
     space_act = game_get_space(game, id_act);
     id_back = space_get_north(space_act);
     id_next = space_get_south(space_act);
     id_left = space_get_west(space_act);
     id_right = space_get_east(space_act);
+    
+    space_back = game_get_space(game,id_back);
+    space_next = game_get_space(game,id_next);
 
     for(i=0;i<MAX_OBJECTS;i++){
       obj[i] = "       ";
@@ -207,6 +209,8 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
       screen_area_puts(ge->map, str);
       sprintf(str, "  +-------------+");
       screen_area_puts(ge->map, str);
+      
+      
 }
 
     for(i=0;i<MAX_OBJECTS;i++){
@@ -257,11 +261,11 @@ void graphic_engine_paint_game(Graphic_engine *ge, Game *game){
 
   setAux = player_get_object(game->players);
 
-  for(i=0; i<MAX_OBJECTS && player_object_aux !=NO_ID ; i++){
+  for(i=0; i < MAX_OBJECTS ; i++){
 
     if((player_object_aux = set_get_id(setAux, i)) != NO_ID){
 
-      for(j=0; j<MAX_OBJECTS; j++){
+      for(j=0; j < MAX_OBJECTS; j++){
         if(player_object_aux == object_get_id(game->objects[j])){
           sprintf(str, "Object of the player: %s", object_get_name(game->objects[j]));
           screen_area_puts(ge->descript, str);

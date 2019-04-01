@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "game_reader.h"
+#include "link.h"
 
 
 
@@ -35,11 +36,11 @@ STATUS game_reader_load_spaces(Game* game, char* filename) {
   char firstrow[7];
   char secondrow[7];
   char thirdrow[7];
-  Id id = NO_ID, 
-  north = NO_ID, 
-  east = NO_ID, 
-  south = NO_ID, 
-  west = NO_ID;
+  Link * id = NULL;
+  Link *north = NULL;
+  Link *east = NULL; 
+  Link *south = NULL; 
+  Link *west = NULL;
   Space* space = NULL;
   STATUS status = OK;
   
@@ -202,10 +203,10 @@ STATUS game_reader_load_links(Game* game, char* filename) {
   char name[WORD_SIZE] = "";
   char* toks = NULL;
   Id link_id = NO_ID;
-  Id link1 =  NO_ID;
-  Id link2 =  NO_ID;
+  Link * link1 =  NULL;
+  Link * link2 =  NULL;
   Link* link = NULL;
-  STATE state = UNKNOWN;
+  STATE state = DESCONOCIDO;
   
   STATUS status = OK;
   int num_objects = 0;
@@ -237,22 +238,25 @@ STATUS game_reader_load_links(Game* game, char* filename) {
       strcpy(name, toks);
 
       toks = strtok(NULL, "|");
-      link1 = atol(toks);
+      link1 = link_create(atol(toks));
 
       toks = strtok(NULL, "|");
-      link2 = atol(toks);
+      link2 = link_create(atol(toks));
 
       toks = strtok(NULL, "|");
       state = atol(toks);//revisar como coger la opcion STATE(abierto, cerrado)
 
-
-	
-        link = link_create(link_id);
+      
+       link = link_create(link_id);
         if(link != NULL){
           link_set_name(link,name);
-          
-          //falta guardar link en algun sitio de game
+          link_set_link1(link, link1->identificador);
+          link_set_link2(link, link2->identificador);
+          link_set_state(link, state);
+          game_add_link(game,link);
         }
+      
+       
         num_objects++;
       }
     }

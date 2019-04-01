@@ -24,10 +24,10 @@
 struct _Space {
   Id id;                      /*!< The ID the space has assigned */
   char name[WORD_SIZE + 1];   /*!< The name we can assign to the space */
-  Link north;                   /*!< The upper part of the space */
-  Link south;                   /*!< The downwards part of the space */
-  Link east;                    /*!< The right part of the space */
-  Link west;                    /*!< The left part of te space */
+  Link* north;                   /*!< The upper part of the space */
+  Link* south;                   /*!< The downwards part of the space */
+  Link* east;                    /*!< The right part of the space */
+  Link* west;                    /*!< The left part of te space */
   Set *objects;               /*!< What object iss currently on the space */
   char *gdesc[3][7];             /*!< campo gdesc*/
 };
@@ -143,7 +143,7 @@ STATUS space_set_name(Space* space, char* name) {
  *  @param id is the space's id
  */
 
-STATUS space_set_north(Space* space, Link link) {
+STATUS space_set_north(Space* space, Link *link) {
   if (!space || link == NULL) {
     return ERROR;
   }
@@ -165,7 +165,7 @@ STATUS space_set_north(Space* space, Link link) {
  */
 
 
-STATUS space_set_south(Space* space, Link link) {
+STATUS space_set_south(Space* space, Link *link) {
   if (!space || link == NULL) {
     return ERROR;
   }
@@ -190,7 +190,7 @@ STATUS space_set_south(Space* space, Link link) {
  */
 
 
-STATUS space_set_east(Space* space, Link link) {
+STATUS space_set_east(Space* space, Link *link) {
   if (!space || link == NULL) {
     return ERROR;
   }
@@ -212,7 +212,7 @@ STATUS space_set_east(Space* space, Link link) {
  *  @param id is the space's id
  */
 
-STATUS space_set_west(Space* space, Link link) {
+STATUS space_set_west(Space* space, Link *link) {
   if (!space || link == NULL) {
     return ERROR;
   }
@@ -298,7 +298,7 @@ Id space_get_id(Space* space) {
  *  @param space is the space we created
  */
 
-Link space_get_north(Space* space) {
+Link* space_get_north(Space* space) {
   if (!space) {
     return NULL;
   }

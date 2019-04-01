@@ -43,8 +43,12 @@ Id object_get_id(Object* object);
 /* It assigns a name to the object */
 STATUS object_set_name(Object* object, char* name);
 
+STATUS object_set_descripcion(Object* object, char* descripcion);
+
 /* It returns the name assigned to the object */
 char* object_get_name(Object* object);
+
+char * object_get_descripcion(Object* object);
 
 /* It prints the object on screen */
 STATUS object_print(Object* object);

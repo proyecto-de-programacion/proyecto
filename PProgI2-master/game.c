@@ -14,9 +14,9 @@
 #include <string.h>
 #include "game.h"
 #include "game_reader.h"
+#include "link.h"
 
 #define N_CALLBACK 9
-
 
 struct _Game{ 
   Player *players;    /* !<  Structure of the Player  */
@@ -24,9 +24,8 @@ struct _Game{
   Die *dice;          /*!< Structure of the Die */
   Space* spaces[MAX_SPACES + 1];    /*!< Array of structures of Space */
   Command *cmd;    /*!< Last command */
-  Link *links;//3103 creado array de links punto 12 de la practica
+   Link *links[MAX_SPACES + 1];
 };
-
 
 
 /**
@@ -41,11 +40,16 @@ typedef void (*callback_fn)(Game* game);
 void game_callback_unknown(Game* game);
 void game_callback_exit(Game* game);
 void game_callback_next(Game* game);
+void game_callback_north(Game* game);
 void game_callback_back(Game* game);
+void game_callback_south(Game* game);
 void game_callback_left(Game* game);
+void game_callback_west(Game* game);
 void game_callback_right(Game* game);
+void game_callback_east(Game* game);
 void game_callback_roll(Game* game);
 void game_callback_pickup(Game* game);
+void game_callback_inspect(Game* game);
 void game_callback_drop(Game* game);
 /* */
 
@@ -53,11 +57,16 @@ static callback_fn game_callback_fn_list[N_CALLBACK]={
   game_callback_unknown,
   game_callback_exit,
   game_callback_next,
+  game_callback_north,
   game_callback_back,
+  game_callback_south,
   game_callback_left,
+  game_callback_west,
   game_callback_right,
+  game_callback_east,
   game_callback_roll,
   game_callback_pickup,
+  game_callback_inspect,
   game_callback_drop};
 
 
@@ -87,6 +96,11 @@ STATUS game_create(Game* game) {
   }
   game->dice = die_create();
   game->cmd = command_create();
+  
+  for(i=0; i<MAX_OBJECTS; i++){
+    game->links[i]= NULL;
+  }
+  
 
   return OK;
 }
@@ -113,7 +127,11 @@ STATUS game_create_from_file(Game* game, char* filename) {
   if(game_reader_load_objects(game, filename) == ERROR){
     return ERROR;
   }
-  game_set_player_location(game, game_get_space_id_at(game, FIRST_SPACE));
+  if(game_reader_load_links(game, filename) == ERROR){
+    return ERROR;
+  }
+  
+  game_set_player_location(game, game_get_space_id_at(game, 0));
   return OK;
 }
 
@@ -142,6 +160,11 @@ STATUS game_destroy(Game* game) {
   for(i=0; i<MAX_OBJECTS;i++){
     object_destroy(game->objects[i]);
   }
+  
+  for(i=0; i<MAX_OBJECTS;i++){
+    link_destroy(game->links[i]);
+  }
+  
   command_destroy(game->cmd);
   return OK;
 }
@@ -173,6 +196,26 @@ STATUS game_add_space(Game* game, Space* space) {
   }
 
   game->spaces[i] = space;
+
+  return OK;
+}
+
+STATUS game_add_link(Game* game, Link* link) {
+  int i = 0;
+
+  if (link == NULL) {
+    return ERROR;
+  }
+
+  while ( (i < MAX_SPACES) && (game->links[i] != NULL)){
+    i++;
+  }
+
+  if (i >= MAX_SPACES) {
+    return ERROR;
+  }
+
+  game->links[i] = link;
 
   return OK;
 }
@@ -215,7 +258,11 @@ Id game_get_space_id_at(Game* game, int position) {
 STATUS game_update(Game* game, Command *pc) {
   Enum_command last_cmd;
   last_cmd = command_get_command(pc);
-  
+
+  /*  Sets the structure command of game equal as the one chosen by the player */
+  command_setCommand(game->cmd, last_cmd);
+  command_setName(game->cmd, command_getName(pc));
+
   (*game_callback_fn_list[last_cmd])(game);
   
   return OK;
@@ -330,6 +377,57 @@ void game_callback_pickup(Game *game){
   return;
 }
 
+void game_callback_inspect(Game *game){
+    Id object_id = NO_ID; /* El id del objeto del nombre pasado*/ 
+	int i;
+    char *pName = NULL;
+
+    pName = command_getName(game->cmd);
+
+    if(!game || pName == NULL){
+      return;
+    }
+    
+    
+  for(i=0; i< MAX_OBJECTS && game->objects[i] != NULL; i++){
+	  /*  Si existe un objeto con ese nombre comprueba que este en el espacio del jugador  */
+    if(object_get_name(game->objects[i]) == pName){
+      
+      char *descripcion = NULL;
+      descripcion = object_get_descripcion(game->objects[i])
+      
+      printf("\n\n Descripcion : %s\n\n", descripcion);
+      
+      return;
+    }
+
+  }
+    
+    //arriba se recorren todos los objetos de game y abajo se recorren todos los inventory de players
+    
+    char *player = NULL;
+
+    player = command_getName(game->cmd);
+    
+   for(i=0; i< MAX_OBJECTS && game->players[i] != NULL; i++){
+	  /*  Si existe un objeto con ese nombre comprueba que este en el espacio del jugador  */
+    if(object_get_name(game->players[i]) == player){
+      
+      //char *descripcion = NULL;
+      //descripcion = object_get_descripcion(game->players[i].inventory.objectsIdentificadores)
+      
+      //printf("\n\n Descripcion : %s\n\n", descripcion);
+      
+      return;
+    }
+
+  } 
+	
+    
+    
+    
+}
+
 
 /**
 *     @brief Drop in the object from the player location
@@ -383,7 +481,9 @@ void game_callback_exit(Game* game) {
 *      param: structure Game from file game.h 
 *      @AlexConache & CiroAlonso                       
 */
-
+void game_callback_north(Game* game) {
+    game_callback_next(game);
+}
 
 void game_callback_next(Game* game) {
   int i = 0;
@@ -405,6 +505,11 @@ void game_callback_next(Game* game) {
       return;
     }
   }
+}
+
+
+void game_callback_west(Game* game) {
+    game_callback_left(game);
 }
 /**
 *      @brief It moves the player to the box linked on the left
@@ -435,6 +540,10 @@ void game_callback_left(Game* game) {
       return;
     }
   }
+}
+
+void game_callback_east(Game* game) {
+    game_callback_right(game);
 }
 
 /**
@@ -479,6 +588,9 @@ void game_callback_right(Game* game) {
 *      @AlexConache & CiroAlonso                       
 */
 
+void game_callback_south(Game* game) {
+    game_callback_back(game);
+}
 
 void game_callback_back(Game* game) {
   int i = 0;
@@ -588,6 +700,15 @@ STATUS game_space_getObject(Game *game, Id id){
     }
   }
   return ERROR;
+}
+
+Id game_get_link_id_at(Game* game, int position) {
+
+  if (position < 0 || position >= MAX_SPACES) {
+    return NO_ID;
+  }
+
+  return link_get_id(game->links[position]);
 }
 
 /* !< Sets the object to the space you want */

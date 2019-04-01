@@ -79,6 +79,8 @@ STATUS set_del(Set* set, Id id){
            set->arId[i]= set->arId[posArray];
            set->arId[posArray-1] = NO_ID;
            return OK;
+        }else{
+            return ERROR;
         }
     }
    
@@ -140,13 +142,13 @@ BOOL set_Id_inArray(Set *set, Id id){
 
 /* Hace una copia de la estructura Set y te devuelve una nueva creada con la misma informacion */
 Set *set_copy(Set *ps){
-    int i;
+    int i = 0;
     Set *pAux = NULL;
     if(!ps){
         return NULL;
     }
 
-    pAux = (Set *)malloc(sizeof(Set));
+    pAux = set_create();
     if(!pAux){
         return NULL;
     }

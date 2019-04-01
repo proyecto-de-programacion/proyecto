@@ -29,7 +29,7 @@ Link* link_create(Id id){
     newLink->name[0] = '\0';
     newLink->link1= NO_ID;
     newLink->link2= NO_ID;
-    newLink->state= STATE.UNKNOWN;
+    newLink->state= STATE.DESCONOCIDO;
     
     return newLink;
 }

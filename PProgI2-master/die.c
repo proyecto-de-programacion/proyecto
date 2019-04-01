@@ -24,7 +24,7 @@ struct _Die {
 
 Die* die_create(){
     
-   Die *newDie = NULL;
+  Die *newDie = NULL;
   
   newDie = (Die *) malloc(sizeof (Die));
 
@@ -35,8 +35,6 @@ Die* die_create(){
   newDie->last_roll = 0;
 
   return newDie; 
-    
-    
 }
 
 /**
@@ -57,12 +55,10 @@ STATUS die_destroy(Die* die){
     
     if (!die) {
         return ERROR;
-      }
+    }
 
     free(die);
-
     return OK;
-    
 }
 
 /**

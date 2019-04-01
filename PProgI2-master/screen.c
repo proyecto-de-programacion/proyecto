@@ -10,8 +10,8 @@
  * Definition of constant values
  */
 
-#define ROWS 23
-#define COLUMNS 80
+#define ROWS 40
+#define COLUMNS 100
 #define TOTAL_DATA (ROWS * COLUMNS) + 1
 
 #define BG_CHAR '~'

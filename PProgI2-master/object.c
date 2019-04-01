@@ -25,6 +25,7 @@
 struct _Object {
   Id id;                     /*!< The ID the object has assigned */
   char name[WORD_SIZE + 1];  /*!< The name we can assign to the object */
+  char descripcion[WORD_SIZE + 1];
  };
 
 /**
@@ -55,6 +56,7 @@ Object* object_create(Id id) {
   newObject->id = id;
 
   newObject->name[0] = '\0';
+  newObject->descripcion[0] = '\0';
 
   return newObject;
   }
@@ -114,6 +116,20 @@ STATUS object_set_name(Object* object, char* name) {
   return OK;
 }
 
+STATUS object_set_descripcion(Object* object, char* descripcion) {
+
+  /* This code makes sure an object exists and if it does it has a name */
+
+  if (!object || !descripcion) {
+    return ERROR;
+  }
+
+  if (!strcpy(object->descripcion, descripcion)) {
+    return ERROR;
+  }
+
+  return OK;
+}
 
 /**
  *  @brief Gets the object's name
@@ -135,6 +151,13 @@ char * object_get_name(Object* object) {
     return NULL;
   }
   return object->name;
+}
+
+char * object_get_descripcion(Object* object) {
+  if (!object) {
+    return NULL;
+  }
+  return object->descripcion;
 }
 
 /**
@@ -181,7 +204,7 @@ STATUS object_print(Object* object) {
     return ERROR;
   }
 
-  fprintf(stdout, "--> Object (Id: %ld; Name: %s)\n", object->id, object->name);
+  fprintf(stdout, "--> Object (Id: %ld; Name: %s; Descripcion_ %s)\n", object->id, object->name,object->descripcion);
 
   return OK;
 }

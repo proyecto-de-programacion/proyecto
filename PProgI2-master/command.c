@@ -7,9 +7,19 @@
  * @date 19-12-2014
  * @copyright GNU Public License
  */
+/**
+ * @brief It implements the command interpreter
+ *
+ * @file command.c
+ * @author Profesores PPROG
+ * @version 1.0
+ * @date 19-12-2014
+ * @copyright GNU Public License
+ */
 
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <stdlib.h>
 #include "command.h"
 
@@ -22,8 +32,8 @@ struct _Command{
 };
 
 
-char *cmd_to_str[N_CMD] = {"No command", "Unknown", "Exit", "Next", "Back", "Roll","Left","Right","Pickup", "Drop"};
-char *short_cmd_to_str[N_CMD] = {"","","e","n","b","rl","l","r","p","d"};
+char *cmd_to_str[N_CMD] = {"No command", "Unknown", "Exit", "Next", "Back", "Roll","Left","Right","Pickup", "Drop","Move east","Move north","Move west","Move south","Inspect"};
+char *short_cmd_to_str[N_CMD] = {"","","e","n","b","rl","l","r","p","d", "m e","m n", "m w","m s"."i"};
 
 Command *command_create(){
   Command *aux = NULL;
@@ -34,6 +44,7 @@ Command *command_create(){
   }
 
   aux->cmd = NO_CMD;
+  strcpy(aux->name," ");
 
   return aux;
 }
@@ -49,7 +60,17 @@ char *command_getName(Command *pc){
   if(!pc){
     return NULL;
   }
-  return pc->name;
+  return (char *)pc->name;
+}
+
+Command *command_setName(Command *pc, const char *name){
+  if(!pc || !name){
+    return NULL;
+  }
+  if(!strcpy(pc->name, name)){
+    return NULL;
+  }
+  return pc;
 }
 
 Enum_command command_get_command(Command *pc){
@@ -59,6 +80,12 @@ Enum_command command_get_command(Command *pc){
   return pc->cmd;
 }
 
+void command_setCommand(Command *pc, Enum_command cmd){
+  if( !pc ){
+    return;
+  }
+  pc->cmd = cmd;
+}
 
 STATUS command_get_user_input(Command *pc){
   
@@ -75,13 +102,18 @@ STATUS command_get_user_input(Command *pc){
 
     while (pc->cmd == UNKNOWN && i < N_CMD){ 
 
-      if (!strncasecmp(cmd_name, short_cmd_to_str[i],WORD_SIZE) || !strncasecmp(cmd_name, cmd_to_str[i],WORD_SIZE)){
+      if (!strcasecmp(cmd_name, short_cmd_to_str[i]) || !strcasecmp(cmd_name, cmd_to_str[i])){
         pc->cmd = i  + NO_CMD;
 
         if (pc->cmd == PICKUP || pc->cmd == DROP){
           toks= strtok(NULL," ");
-          strcpy(pc->name, toks);   
+          if(toks == NULL){
+            return ERROR;
+          }
+          strcpy(pc->name, toks);  
           return OK;         
+        }else{
+          return OK;
         }
       }
       else {

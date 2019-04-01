@@ -41,7 +41,7 @@ typedef enum {
 } DIRECTION;
 
 typedef enum{
-  ABIERTO, CERRADO,UNKNOWN
+  ABIERTO, CERRADO, DESCONOCIDO
 } STATE;
 
 #endif
