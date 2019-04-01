@@ -5,16 +5,16 @@
 #include "set.h"
 
 struct _Set {
-    Id *arId[TAM_ID];
+    Id  arId[TAM_ID];
     int numArrays;
 };
 
 
 Set* set_create() {
-    int i;
+    int i=0;
     Set *newSet = NULL;
   
-    newSet = (Set *) malloc(sizeof (Set));
+    newSet = (Set *) malloc(sizeof (Set)+1);
 
     if (newSet == NULL) {
         return NULL;
@@ -22,58 +22,63 @@ Set* set_create() {
     for(i=0;i<TAM_ID; i++){
         newSet->arId[i]=NO_ID;
     }
-
+    newSet->numArrays = INIT_VALUE;
     return newSet;
 }
 
 
-STATUS set_destroy(Set* conjunto){    
-    if (!conjunto) {
+STATUS set_destroy(Set* set){    
+    if (!set) {
         return ERROR;
     }
 
-    free(conjunto);   
+    free(set);   
 
     return OK;
 }
     
-STATUS set_add(Set* conjunto, Id id){
-    if (id == NO_ID){
+STATUS set_add(Set* set, Id id){
+    int i;
+    if (id == NO_ID || set == NULL){
         return ERROR;
     }
-    if(conjunto == NULL){
-       return ERROR;
-    }
-   
-    if(conjunto->numArrays == TAM_ID){
+
+    if(set->numArrays == TAM_ID-1){
       return ERROR;
     }
-  
-    conjunto->arId[conjunto->numArrays] = id;
-    conjunto->numArrays++;
+    /* Compruebo que no se repita el id dado (cuestion= se puede devolver OK ya que el objeto 
+     *ya esta dentro del array)                                      */
+    for(i=0; i<TAM_ID; i++){
+        if(set->arId[i]== id){
+            return OK;
+        }
+    }
+    set->arId[set->numArrays] = id;
+    set->numArrays++;
      
     return OK;
      
 }
 
 
-STATUS set_del(Set* conjunto, Id id){
+STATUS set_del(Set* set, Id id){
+    int i=0,posArray=0;
 
     if (id == NO_ID)
         return ERROR;
-    if(conjunto == NULL){
+    if(set == NULL){
        return ERROR;
     }
-    int i,j, posArray;
-
-    posArray = conjunto->numArrays;
+    posArray = set->numArrays;
 
     for(i=0; i < posArray ; i++){
-        if(conjunto->arId[i] == id){          
-            for(j=i; j < posArray; j++){
-               conjunto->arId[j] = conjunto->arId[j+1];
-            }
-            conjunto->numArrays--;
+        if(set->arId[i] == id){   
+            if(i==0){
+                set->arId[i] = NO_ID;
+            }       
+           set->arId[i]= set->arId[posArray];
+           set->arId[posArray-1] = NO_ID;
+           return OK;
         }
     }
    
@@ -88,17 +93,69 @@ STATUS set_print(Set *set){
         return ERROR;
     }
 
-    fprintf(stdout, "--> Set (Number of elements: %ld)\n", set->numArrays);
+    fprintf(stdout, "--> Set (Number of elements: %ld)\n", (long)set->numArrays);
 
     for(i=0; i<TAM_ID; i++){
-        fprintf(stdout, "-->Set (Id: %ld)\n", set->arId[i]);
+        fprintf(stdout, "-->Set (Id: %ld)\n", (long)set->arId[i]);
     }
 
     return OK;
 }
 
 
+Id set_get_id(Set* set, int position){
+    
+    if(!set){
+        return NO_ID;
+    }
 
+    return set->arId[position];
+}
+BOOL set_is_full(Set* set) {
+	
+	if(set->numArrays == TAM_ID){
+		return TRUE;
+	}
 
+	return FALSE;
+}
 
+BOOL set_is_empty(Set* set) {
+	if(set->numArrays == 0) return TRUE;
+	else return FALSE;
+}
 
+BOOL set_Id_inArray(Set *set, Id id){
+    int i;
+    if(!set){
+        return FALSE;
+    }
+    for(i=0; i<TAM_ID; i++){
+        if(set->arId[i]==id){
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+/* Hace una copia de la estructura Set y te devuelve una nueva creada con la misma informacion */
+Set *set_copy(Set *ps){
+    int i;
+    Set *pAux = NULL;
+    if(!ps){
+        return NULL;
+    }
+
+    pAux = (Set *)malloc(sizeof(Set));
+    if(!pAux){
+        return NULL;
+    }
+
+    for(i=0 ; i < ps->numArrays ; i++){
+        if(set_add(pAux, ps->arId[i])==ERROR){
+            set_destroy(ps);
+            return NULL;
+        }
+    }
+    return pAux;
+}

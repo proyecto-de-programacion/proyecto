@@ -40,4 +40,8 @@ typedef enum {
   N, S, E, W
 } DIRECTION;
 
+typedef enum{
+  ABIERTO, CERRADO,UNKNOWN
+} STATE;
+
 #endif

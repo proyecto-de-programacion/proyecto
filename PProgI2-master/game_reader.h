@@ -2,9 +2,9 @@
 * @brief It defines a textual game reader
 * 
 * @file game_reader.h
-* @AlexConache y CiroAlonso
-* @version 1.0 
-* @date 17/02/2019
+* @author Alexandra Conache
+* @version 2.0 
+* @date 25/02/2019
 */
 
 
@@ -13,9 +13,33 @@
 
 #include "command.h"
 #include "game.h"
-/* !<  Reads and loads the spaces  */
+
+
+/**
+ * @author PPROG professors 
+ * @brief Reads the file and loads the spaces found
+ * 
+ * @param Game is where the pointers to "toks" are getting copied
+ * @param filename is the name of the file we're using
+ * 
+ * @return OK or ERROR
+ * 
+ */ 
 STATUS game_reader_load_spaces(Game* game, char* filename);
- /* !<  Get the space he is reading  */
-Space* game_reader_get_space(Game* game, Id id);
- 
+
+/**
+ * @author Alexandra Conache 
+ * @brief Reads the file and loads the objects found
+ * 
+ * @param Game is where the pointers to "toks" are getting copied
+ * @param filename is the name of the file we're using
+ * 
+ * @return OK or ERROR
+ * 
+ */ 
+STATUS game_reader_load_objects(Game* game, char* filename);
+
+STATUS game_reader_load_links(Game* game, char* filename);
+
+
 #endif

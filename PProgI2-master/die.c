@@ -31,7 +31,8 @@ Die* die_create(){
   if (newDie == NULL) {
     return NULL;
   }
-  newDie->id = NO_ID;
+  newDie->id =NO_ID;
+  newDie->last_roll = 0;
 
   return newDie; 
     
@@ -77,7 +78,8 @@ STATUS die_destroy(Die* die){
  */
 
 int die_roll(Die *die){
-  int i;
+  time_t time_randomizer;
+  int random;
 
   if (!die){
     return -1;
@@ -85,11 +87,14 @@ int die_roll(Die *die){
 
   srand(time(NULL));
 
-  for (i=0; i<MAX_DIE; i++){
-    die->last_roll = ((rand()%6)+1);
+  srand((unsigned) time(&time_randomizer));
+  random = ((rand()%6)+1);
+  
+  if(random == 0){
+    return -1;
   }
 
-  return die->last_roll;
+  return random;
 }
 
 
@@ -110,7 +115,7 @@ STATUS die_print(Die* die){
   if(!die){
     return ERROR;
   }
-  fprintf(stdout,"-->Die ID: %ld rolled: %d\n", die->id, die->last_roll);
+  fprintf(stdout,"-->Die ID: %ld | Last Roll: %d\n", die_get_id(die), die_get_lastRoll(die));
 
   return OK;
 }
@@ -134,3 +139,9 @@ int die_get_lastRoll(Die *d){
   return d->last_roll;
 }
 
+Id die_get_id(Die* die){
+  if(!die){
+    return NO_ID;
+  }
+  return die->id;
+}

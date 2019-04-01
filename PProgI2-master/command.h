@@ -11,21 +11,49 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include "types.h"
 /* !<  Enumeration of the commands and their values  */
 
-typedef enum enum_Command {
+typedef enum Enum_Command {
   NO_CMD = -1,  
   UNKNOWN,
   EXIT,
   NEXT,
   BACK,
-  ROLL,
   LEFT,
   RIGHT,
+  ROLL,
   PICKUP,
-  DROP} T_Command;
+  DROP
+  }Enum_command;
 
-/* !< Gets the user input of the commands */
-T_Command get_user_input();
+typedef struct _Command Command;
+
+
+/*!< Creates the structure Command */
+Command *command_create();
+
+/*!< Destroy the structure Command */
+void command_destroy(Command *pc);
+
+/*!< Returns the name of the object selected */
+char *command_getName(Command *pc);
+
+/*!< Returns the command we imputed */
+Enum_command command_get_command(Command *pc);
+
+/**
+*      @brief Gets the user input of the commands
+*                              
+*      In charge of reading the value of the users input of the commands 
+*           
+*      @param The character we imput
+*      @date  11/03/2019 
+*      @authors AlexandraConache & CiroAlonso                       
+*/
+
+
+/*!< Gets the command selected by the player */
+STATUS command_get_user_input(Command *pc);
 
 #endif

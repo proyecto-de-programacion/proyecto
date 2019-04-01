@@ -13,12 +13,15 @@
 #define PLAYER_H
 
 #include "types.h"
+#include "space.h"
+#include "object.h"
+#include "inventory.h"
 
 /**
  * Definition of constant values
  */
 
-#define MAX_PLAYERS 10
+#define MAX_PLAYERS 4
 
 /**
  * Definition of data structures
@@ -37,7 +40,7 @@ Player* player_create();
 STATUS player_destroy(Player* player);
 
 /* It returns the player's id */
-Id player_get_id(Player* player);
+Inventory * player_get_inventory(Player* player);
 
 /* It assigns a name to the player */
 STATUS player_set_name(Player* player, char* name);
@@ -46,17 +49,22 @@ STATUS player_set_name(Player* player, char* name);
 const char* player_get_name(Player* player);
 
 /* It makes sure the player has an object and has no errors */
-STATUS player_set_object(Player* player, BOOL value);
+STATUS player_set_object(Player* player, Id id);
 
 /* It returns the result of the inquiry if the player has indeed an object */
-BOOL player_get_object(Player* player);
+Set* player_get_object(Player* player);
 
 /* It prints the player on screen */
 STATUS player_print(Player* player);
 
 /* It tells the game to return the player location ID */
-Id game_get_player_location(Player* player);
+Id player_get_location(Player* player);
+
+STATUS player_drop_object(Player* player,Id id);
 
 /* It assigns an id to the player in game */
-STATUS game_set_player_location(Player* player, Id id);
+STATUS player_set_location(Player* player, Id id);
+
+//pendiente de preguntar:
+    //para saber si el identificador de un objeto está en la misme
 #endif

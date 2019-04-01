@@ -36,5 +36,5 @@ player.o: player.c player.h
 set.o: set.c set.h
 	gcc -Wall -ansi -pedantic -c -g set.c
 
-clear:
+clean:
 	rm -f *o JuegoOca

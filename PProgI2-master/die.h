@@ -21,3 +21,5 @@ STATUS die_print(Die* die);
 
 /* Returns the last roll made */
 int die_get_lastRoll(Die *d);
+
+Id die_get_id(Die* die);

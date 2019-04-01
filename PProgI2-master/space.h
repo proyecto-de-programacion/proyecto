@@ -24,14 +24,14 @@
 #define SPACE_H
 
 #include "types.h"
-
+#include "set.h"
 
 /**
  * Definition of constant values
  */
 #define MAX_SPACES 100
-
-
+#define FIRST_SPACE 1
+#define MAX_OBJECTS 4
 
 /**
  * Definition of data structures
@@ -41,6 +41,8 @@ typedef struct _Space Space;
 /**
  *  Delcaration of public functions
  */
+
+
 /* It creates a space */
 Space* space_create(Id id);
 
@@ -57,39 +59,50 @@ STATUS space_set_name(Space* space, char* name);
 const char* space_get_name(Space* space);
 
 /* It assigns the space another space in the north direction */
-STATUS space_set_north(Space* space, Id id);
+STATUS space_set_north(Space* space,Link link);
 
 /* It returns wether the space has another linked north of it */
-Id space_get_north(Space* space);
+Link space_get_north(Space* space);
 
 /* It assigns the space another space in the south direction */
-STATUS space_set_south(Space* space, Id id);
+STATUS space_set_south(Space* space, Link link);
 
 /* It returns wether the space has another linked south of it */
-Id space_get_south(Space* space);
+Link space_get_south(Space* space);
 
 /* It assigns the space another space in the east direction */
-STATUS space_set_east(Space* space, Id id);
+STATUS space_set_east(Space* space, Link link);
 
 /* It returns wether the space has another linked east of it */
-Id space_get_east(Space* space);
+Link space_get_east(Space* space);
 
 /* It assigns the space another space in the west direction */
-STATUS space_set_west(Space* space, Id id);
+STATUS space_set_west(Space* space, Link link);
 
 /* It returns wether the space has another linked west of it */
-Id space_get_west(Space* space);
+Link space_get_west(Space* space);
 
-/* It makes sure the space has an object and has no errors */
-STATUS space_set_object(Space* space, int value);
+/* Makes sure the space exists and assign it an object */
+STATUS space_set_object(Space* space, Id id);
 
-/* It returns the result of the inquiry if the space has indeed an object */
-Id space_get_object(Space* space, Id id);
+/* It deletes the object form set if is in there returns OK if done, else ERROR  */
+STATUS space_get_object(Space* space, Id id);
 
 /* It prints the space on screen */
 STATUS space_print(Space* space);
 
+
 /* Returns true if the object you ask is in the space, false if everythings else   */
-BOOL space_object_id(Space *space, Id Id);
+BOOL space_object_is_in(Space* space, Id id);
+
+void space_printASCII(char *gdesc[3]);
+
+STATUS space_set_gdesc(Space* space, char *string, int i);
+
+char* space_get_gdesc1(Space* space);
+char* space_get_gdesc2(Space* space);
+char* space_get_gdesc3(Space* space);
+
+
 
 #endif

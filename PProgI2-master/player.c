@@ -12,8 +12,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "types.h"
 #include "player.h"
+#include "inventory.h"
 
 
 /**
@@ -24,10 +24,10 @@
  */
 
 struct _Player {
-  Id id;                        /*!< The ID the player has assigned */
+  Inventory inventory;                        /*!< The ID the player has assigned */
   Id player_location;           /*!< The specific location the player is in */
   char name[WORD_SIZE + 1];     /*!< The name we can assign to the player */
-  BOOL object;                  /*!< The way we can assess wether there is an object or not when inquired */
+  Set *object;                  /*!< The way we can assess wether there is an object or not when inquired */
 };
 
 /**
@@ -49,17 +49,15 @@ Player* player_create() {
 
   Player *newPlayer = NULL;
 
-  newPlayer = (Player *) malloc(sizeof (Player));
+  newPlayer = (Player *)malloc(sizeof(Player));
 
   if (newPlayer == NULL) {
     return NULL;
   }
-  newPlayer->id = NO_ID;
+  newPlayer->inventory = inventory_create(100);
 
   newPlayer->name[0] = '\0';
-
-  newPlayer->object = FALSE;
-
+  newPlayer->object = set_create();
   newPlayer->player_location = NO_ID;
 
   return newPlayer;
@@ -85,7 +83,7 @@ STATUS player_destroy(Player* player) {
   if (!player) {
     return ERROR;
   }
-
+  set_destroy(player->object);
   free(player);
 
   return OK;
@@ -133,11 +131,12 @@ STATUS player_set_name(Player* player, char* name) {
  *  @param value is the value the player has the object with either a TRUE or a FALSE
  */
 
-STATUS player_set_object(Player* player, BOOL value) {
+STATUS player_set_object(Player* player, Id id) {
+  
   if (!player) {
     return ERROR;
   }
-  player->object = value;
+  set_add(player->object,id);
   return OK;
 }
 
@@ -175,31 +174,30 @@ const char * player_get_name(Player* player) {
  *  @param id is the player's id
  */
 
-Id player_get_id(Player* player) {
+Inventory * player_get_inventory(Player* player) {
   if (!player) {
     return NO_ID;
   }
-  return player->id;
+  return player->inventory;
 }
 
-/**
- *  @brief Confirms the player has the object
- *
- *  player_get_id   Is a function that makes sure the player has been created
- *                  and returns with TRUE or FALSE whether the player has
- *                  the object or not
- *
- *  @date 17/02/2019
- *  @authors Alonso Aquino Ciro, Conache Alexandra
- *
- *  @param player is the player we created
- */
 
-BOOL player_get_object(Player* player) {
-  if (!player) {
-    return FALSE;
+/* gets the objects from the player and returns it as a set structure 
+*
+*
+*   !!! Al que haya hecho esto, es un poco chapuza, ya que devuelves el set de la 
+*      estructura player, osea que se puede acceder a la estructura desde fuera
+*/
+Set* player_get_object(Player* player){
+  Set *aux = NULL;
+  if(!player || player->object == NULL){
+    return NULL;
   }
-  return player->object;
+  aux = set_copy(player->object);
+  if(!aux){
+    return NULL;
+  }
+  return aux;
 }
 
 /**
@@ -223,22 +221,27 @@ STATUS player_print(Player* player) {
     return ERROR;
   }
 
-  fprintf(stdout, "--> Player (Id: %ld; Name: %s)\n", player->id, player->name);
+  fprintf(stdout, "--> Player (Name: %s)\n", player->name);
+  inventory_print(player->inventory);
 
 
-  if (player_get_object(player)) {
-    fprintf(stdout, "---> Object in the player.\n");
+  if (FALSE != player_get_object(player)) {
+    fprintf(stdout, "---> Player holds object %ld.\n",(long)player->object);
   } else {
-    fprintf(stdout, "---> No object in the player.\n");
+    fprintf(stdout, "---> Player has no objects.\n");
   }
-
+  if (NO_ID != player_get_location(player)) {
+    fprintf(stdout, "---> Player's location is %ld.\n",(long)player->player_location);
+  } else {
+    fprintf(stdout, "---> No location.\n");
+  }
   return OK;
 }
 
 /**
  *  @brief Assigns a location to the player
  *
- *  game_set_player_location Is a function that assigns the plauer a location in space
+ *  player_set_location Is a function that assigns the plauer a location in space
  *                           It calls to Player's structure to set the location
  *
  *  @date 17/02/2019
@@ -248,7 +251,7 @@ STATUS player_print(Player* player) {
  *  @param id is the player's id
  */
 
-STATUS game_set_player_location(Player *player, Id id) {
+STATUS player_set_location(Player *player, Id id) {
 
   if (id == NO_ID) {
     return ERROR;
@@ -263,7 +266,7 @@ STATUS game_set_player_location(Player *player, Id id) {
 /**
  *  @brief Returns the player's location
  *
- *  game_get_player_location It calls upon the location set by the game_set_player_location function
+ *  player_get_location It calls upon the location set by the game_set_player_location function
  *                           and returns it
  *
  *  @date 17/02/2019
@@ -272,6 +275,18 @@ STATUS game_set_player_location(Player *player, Id id) {
  *  @param player is the player we created
  */
 
-Id game_get_player_location(Player* player) {
+Id player_get_location(Player* player) {
   return player->player_location;
+}
+
+
+/* El jugador se desprende de uno de los objetos que tiene */ 
+STATUS player_drop_object(Player* player, Id id){
+  if(!player){
+    return ERROR;
+  }
+
+  set_del(player->object, id);
+
+  return OK;
 }
