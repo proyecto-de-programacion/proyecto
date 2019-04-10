@@ -35,12 +35,13 @@ int main(int argc, char** argv) {
 
 
     if (all || test == 1) test1_set_create();
-    if (all || test == 3) test1_set_get_id();
-    if (all || test == 4) test2_set_get_id();
-    if (all || test == 5) test1_set_add();
-    if (all || test == 6) test2_set_add();
-    if (all || test == 7) test1_set_del();
-    if (all || test == 8) test2_set_del();
+    if (all || test == 2) test1_set_get_id();
+    if (all || test == 3) test2_set_get_id();
+    if (all || test == 4) test1_set_add();
+    if (all || test == 5) test2_set_add();
+    if (all || test == 6) test1_set_del();
+    if (all || test == 7) test2_set_del();
+    if (all || test == 8) test3_set_del();
     if (all || test == 9) test1_set_is_full();
     if (all || test == 10) test2_set_is_full();
     if (all || test == 11) test1_set_is_empty();
