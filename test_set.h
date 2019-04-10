@@ -107,7 +107,7 @@ void test1_set_Id_inArray();
 
 
 /**
- *      @test 
+ *      @test Tests that return the set's id function
  *      @pre  Parameter: a NULL set pointer
  *      @post Return: must return ERROR
  */
