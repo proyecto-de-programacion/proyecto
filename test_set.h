@@ -47,7 +47,7 @@ void test2_set_get_id();
 void test1_set_add();
 
 /**
- *      @test 
+ *      @test test that the set is added
  *      @pre  Parameter: a NULL set pointer
  *      @post Return: must return ERROR
  */
@@ -61,7 +61,7 @@ void test2_set_add();
 void test1_set_del();
 
 /**
- *      @test 
+ *      @test tests that the set is deleted
  *      @pre  Parameter: a NULL set pointer
  *      @post Return: must return ERROR
  */
