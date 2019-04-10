@@ -76,7 +76,7 @@ void test1_set_is_full();
 
 
 /**
- *      @test 
+ *      @test Tests that set is full
  *      @pre  Parameter: a NULL set
  *      @post Return: return the set's id 
  */
@@ -92,7 +92,7 @@ void test1_set_is_empty();
 
 
 /**
- *      @test
+ *      @test test that set is empty
  *      @pre  Parameter: a NULL set
  *      @post Return: return the set's id 
  */
