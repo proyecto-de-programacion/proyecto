@@ -114,7 +114,7 @@ void test1_set_Id_inArray();
 void test2_set_Id_inArray();
 
 /**
- *      @test 
+ *      @test Tests the return the set's id function
  *      @pre  Parameter: the id
  *      @post Return: must return OK
  */
@@ -122,7 +122,7 @@ void test1_set_delete_id();
 
 
 /**
- *      @test 
+ *      @test Tests that the id is delete
  *      @pre  Parameter: a NULL set pointer
  *      @post Return: must return ERROR
  */
